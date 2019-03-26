@@ -173,29 +173,46 @@ export class RebaseFlow extends React.Component<
     }
   }
 
-  private testRebaseOperation = async (baseBranch: Branch) => {
+  private testRebaseOperation = (baseBranch: Branch) => {
     const { step } = this.state
     if (step.kind !== RebaseStep.ChooseBranch) {
       log.warn(`[RebaseFlow] testRebaseOperation invoked but on the wrong step`)
       return
     }
 
-    const range = revRange(baseBranch.tip.sha, step.currentBranch.tip.sha)
+    this.setState(
+      () => ({
+        rebaseStatus: {
+          kind: ComputedAction.Loading,
+        },
+      }),
+      async () => {
+        const range = revRange(baseBranch.tip.sha, step.currentBranch.tip.sha)
 
-    this.setState(() => ({
-      rebaseStatus: {
-        kind: ComputedAction.Loading,
-      },
-    }))
+        // TODO: where does this 9999 result come from? Is it an actual limit
+        //       or just a side-effect of how things are laid out in the
+        //        repository?
 
-    const commits = await getCommits(this.props.repository, range, 9999)
+        const commits = await getCommits(this.props.repository, range, 9999)
 
-    this.setState(() => ({
-      rebaseStatus: {
-        kind: ComputedAction.Clean,
-        commits,
-      },
-    }))
+        // TODO: in what situations might this not be possible to compite
+
+        // TODO: check if this is a fast-forward (i.e. the selected branch is
+        //       a direct descendant of the base branch) because this is a
+        //       trivial rebase
+
+        // TODO: generate the patches associated with these commits and see if
+        //       they will apply to the base branch - if it fails, there will be
+        //       conflicts to come
+
+        this.setState(() => ({
+          rebaseStatus: {
+            kind: ComputedAction.Clean,
+            commits,
+          },
+        }))
+      }
+    )
   }
 
   private moveToShowConflictedFileState = () => {
