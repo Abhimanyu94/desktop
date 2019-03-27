@@ -20,16 +20,16 @@ export type RebaseProgressOptions = {
   progressCallback: (progress: IRebaseProgress) => void
 }
 
-export type RebaseSuccess = {
+export type CleanRebase = {
   readonly kind: ComputedAction.Clean
   readonly commits: ReadonlyArray<Commit>
 }
 
-export type RebaseConflicts = {
+export type RebaseWithConflicts = {
   readonly kind: ComputedAction.Conflicts
 }
 
-export type RebaseUnsupported = {
+export type RebaseNotSupported = {
   readonly kind: ComputedAction.Invalid
 }
 
@@ -37,10 +37,10 @@ export type RebaseLoading = {
   readonly kind: ComputedAction.Loading
 }
 
-export type RebasePreviewResult =
-  | RebaseSuccess
-  | RebaseConflicts
-  | RebaseUnsupported
+export type RebasePreview =
+  | CleanRebase
+  | RebaseWithConflicts
+  | RebaseNotSupported
   | RebaseLoading
 
 export type RebaseProgressSummary = {

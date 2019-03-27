@@ -2,7 +2,7 @@ import * as React from 'react'
 
 import { Branch } from '../../models/branch'
 import { Repository } from '../../models/repository'
-import { RebasePreviewResult } from '../../models/rebase'
+import { RebasePreview } from '../../models/rebase'
 import { ComputedAction } from '../../models/computed-action'
 import { Commit } from '../../models/commit'
 
@@ -45,9 +45,10 @@ interface IChooseBranchDialogProps {
   readonly initialBranch?: Branch
 
   /**
-   * A preview of the rebase, based on the selected base branch
+   * A preview of the rebase, using the selected base branch to test whether the
+   * current branch may be cleanly applied.
    */
-  readonly rebasePreviewStatus: RebasePreviewResult | null
+  readonly rebasePreviewStatus: RebasePreview | null
 
   /**
    * A function that's called when the dialog is dismissed by the user in the
@@ -210,7 +211,7 @@ export class ChooseBranchDialog extends React.Component<
   private renderRebaseDetails(
     currentBranch: Branch,
     baseBranch: Branch,
-    rebaseStatus: RebasePreviewResult
+    rebaseStatus: RebasePreview
   ): JSX.Element | null {
     if (rebaseStatus.kind === ComputedAction.Loading) {
       return this.renderLoadingRebaseMessage()
