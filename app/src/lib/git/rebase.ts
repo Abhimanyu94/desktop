@@ -94,6 +94,16 @@ export async function getRebaseContext(
   return null
 }
 
+/**
+ * Inspect the `.git/rebase-apply` folder and convert the current context into
+ * a progress summary that can be passed into the rebase flow to hydrate the
+ * component state.
+ *
+ * This is required when Desktop is not responsible for initiating the rebase:
+ *
+ *   - when a rebase outside Desktop encounters conflicts
+ *   - when a `git pull --rebase` was run and encounters conflicts
+ */
 export async function getCurrentProgress(
   repository: Repository
 ): Promise<RebaseProgressSummary | null> {
