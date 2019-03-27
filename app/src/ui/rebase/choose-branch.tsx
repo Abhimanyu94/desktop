@@ -4,7 +4,7 @@ import { Branch } from '../../models/branch'
 import { Repository } from '../../models/repository'
 import { RebasePreview } from '../../models/rebase'
 import { ComputedAction } from '../../models/computed-action'
-import { Commit } from '../../models/commit'
+import { CommitOneLine } from '../../models/commit'
 
 import { IMatches } from '../../lib/fuzzy-find'
 import { truncateWithEllipsis } from '../../lib/truncate-with-ellipsis'
@@ -62,7 +62,7 @@ interface IChooseBranchDialogProps {
   readonly onStartRebase: (
     baseBranch: string,
     targetBranch: string,
-    commits: ReadonlyArray<Commit>
+    commits: ReadonlyArray<CommitOneLine>
   ) => void
 }
 
