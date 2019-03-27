@@ -196,7 +196,7 @@ export class ChooseBranchDialog extends React.Component<
           status={this.props.rebasePreviewStatus}
           classNamePrefix="rebase-status"
         />
-        <p className="rebase-info">
+        <p className="rebase-message">
           {this.renderRebaseDetails(
             currentBranch,
             selectedBranch,
@@ -211,7 +211,7 @@ export class ChooseBranchDialog extends React.Component<
     currentBranch: Branch,
     baseBranch: Branch,
     rebaseStatus: RebasePreviewResult
-  ) {
+  ): JSX.Element | null {
     if (rebaseStatus.kind === ComputedAction.Loading) {
       return this.renderLoadingRebaseMessage()
     }
@@ -230,9 +230,9 @@ export class ChooseBranchDialog extends React.Component<
 
   private renderLoadingRebaseMessage() {
     return (
-      <div className="rebase-message rebase-message-loading">
+      <React.Fragment>
         Checking for ability to rebase automatically...
-      </div>
+      </React.Fragment>
     )
   }
 
@@ -241,22 +241,23 @@ export class ChooseBranchDialog extends React.Component<
     baseBranch: Branch,
     commitsToRebase: number
   ) {
-    if (commitsToRebase > 0) {
-      const pluralized = commitsToRebase === 1 ? 'commit' : 'commits'
-      return (
-        <div className="rebase-message">
-          This will rebase
-          <strong>{` ${commitsToRebase} ${pluralized}`}</strong>
-          {` from `}
-          <strong>{currentBranch.name}</strong>
-          {` onto `}
-          <strong>{baseBranch.name}</strong>
-        </div>
-      )
-    } else {
+    if (commitsToRebase <= 0) {
       return null
     }
+
+    const pluralized = commitsToRebase === 1 ? 'commit' : 'commits'
+    return (
+      <React.Fragment>
+        This will rebase
+        <strong>{` ${commitsToRebase} ${pluralized}`}</strong>
+        {` from `}
+        <strong>{currentBranch.name}</strong>
+        {` onto `}
+        <strong>{baseBranch.name}</strong>
+      </React.Fragment>
+    )
   }
+
   private startRebase = async () => {
     const branch = this.state.selectedBranch
     if (!branch) {
